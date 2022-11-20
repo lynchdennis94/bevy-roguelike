@@ -14,9 +14,12 @@ const SPRITE_SCALE: f32 = 3.0;
 pub struct SpritePlugin;
 impl Plugin for SpritePlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(setup);
+        app.add_startup_system(setup).add_system(move_sprite);
     }
 }
+
+#[derive(Component)]
+struct Movable;
 
 fn setup(
     mut commands: Commands,
@@ -39,14 +42,56 @@ fn setup(
     commands.spawn(Camera2dBundle::default());
 
     // Spawn in a sprite from the atlas
-    commands.spawn(SpriteSheetBundle {
-        sprite: TextureAtlasSprite::new(get_sprite_index_from_coords(21, 0)),
-        texture_atlas: texture_atlas_handle,
-        transform: Transform::from_scale(Vec3::splat(SPRITE_SCALE)),
-        ..default()
-    });
+    commands.spawn((
+        SpriteSheetBundle {
+            sprite: TextureAtlasSprite::new(get_sprite_index_from_coords(21, 0)),
+            texture_atlas: texture_atlas_handle,
+            transform: Transform::from_scale(Vec3::splat(SPRITE_SCALE)),
+            ..default()
+        },
+        Movable,
+    ));
 }
 
 fn get_sprite_index_from_coords(x: usize, y: usize) -> usize {
     return x * SPRITE_COLS + y;
+}
+
+fn apply_movement_units_to_translation(mut translation: Vec3, x: f32, y: f32) -> Vec3 {
+    translation.x += x * SPRITE_TILE_X * SPRITE_SCALE;
+    translation.y += y * SPRITE_TILE_Y * SPRITE_SCALE;
+    return translation;
+}
+
+fn move_sprite(
+    keyboard_input: Res<Input<KeyCode>>,
+    mut sprite_position: Query<(&Movable, &mut Transform)>,
+) {
+    for (_, mut transform) in &mut sprite_position {
+        if keyboard_input.just_pressed(KeyCode::Numpad4) {
+            transform.translation =
+                apply_movement_units_to_translation(transform.translation, -1.0, 0.0);
+        } else if keyboard_input.just_pressed(KeyCode::Numpad6) {
+            transform.translation =
+                apply_movement_units_to_translation(transform.translation, 1.0, 0.0);
+        } else if keyboard_input.just_pressed(KeyCode::Numpad8) {
+            transform.translation =
+                apply_movement_units_to_translation(transform.translation, 0.0, 1.0);
+        } else if keyboard_input.just_pressed(KeyCode::Numpad2) {
+            transform.translation =
+                apply_movement_units_to_translation(transform.translation, 0.0, -1.0);
+        } else if keyboard_input.just_pressed(KeyCode::Numpad7) {
+            transform.translation =
+                apply_movement_units_to_translation(transform.translation, -1.0, 1.0);
+        } else if keyboard_input.just_pressed(KeyCode::Numpad9) {
+            transform.translation =
+                apply_movement_units_to_translation(transform.translation, 1.0, 1.0);
+        } else if keyboard_input.just_pressed(KeyCode::Numpad3) {
+            transform.translation =
+                apply_movement_units_to_translation(transform.translation, 1.0, -1.0);
+        } else if keyboard_input.just_pressed(KeyCode::Numpad1) {
+            transform.translation =
+                apply_movement_units_to_translation(transform.translation, -1.0, -1.0);
+        }
+    }
 }
