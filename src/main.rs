@@ -1,11 +1,11 @@
 use bevy::prelude::*;
 
-mod hello_plugin;
-use hello_plugin::HelloPlugin;
+mod sprite_plugin;
+use sprite_plugin::SpritePlugin;
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
-        .add_plugin(HelloPlugin)
+        .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
+        .add_plugin(SpritePlugin)
         .run();
 }
