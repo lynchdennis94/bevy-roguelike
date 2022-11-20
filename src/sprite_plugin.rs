@@ -5,8 +5,11 @@ const SPRITE_TILE_X: f32 = 13.0;
 const SPRITE_TILE_Y: f32 = 13.0;
 const SPRITE_PADDING_X: f32 = 0.0;
 const SPRITE_PADDING_Y: f32 = 0.0;
+const SPRITE_OFFSET_X: f32 = 1.0;
+const SPRITE_OFFSET_Y: f32 = 1.0;
 const SPRITE_ROWS: usize = 30;
 const SPRITE_COLS: usize = 20;
+const SPRITE_SCALE: f32 = 3.0;
 
 pub struct SpritePlugin;
 impl Plugin for SpritePlugin {
@@ -28,7 +31,7 @@ fn setup(
         SPRITE_COLS,
         SPRITE_ROWS,
         Some(Vec2::new(SPRITE_PADDING_X, SPRITE_PADDING_Y)),
-        None,
+        Some(Vec2::new(SPRITE_OFFSET_X, SPRITE_OFFSET_Y)),
     );
     let texture_atlas_handle: Handle<TextureAtlas> = texture_atlases.add(texture_atlas);
 
@@ -39,7 +42,7 @@ fn setup(
     commands.spawn(SpriteSheetBundle {
         sprite: TextureAtlasSprite::new(get_sprite_index_from_coords(21, 0)),
         texture_atlas: texture_atlas_handle,
-        transform: Transform::from_scale(Vec3::splat(6.0)),
+        transform: Transform::from_scale(Vec3::splat(SPRITE_SCALE)),
         ..default()
     });
 }
