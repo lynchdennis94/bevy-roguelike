@@ -17,3 +17,6 @@ Alongside the python libtcod tutorial above, additional rust and bevy resources 
 * A Roguelike Tutorial in Rust + tcod: https://tomassedovic.github.io/roguelike-tutorial/index.html
 * The Roguelike Dev subreddit: https://www.reddit.com/r/roguelikedev/
 
+# Assets
+The following assets were used to create the game (no assets will be committed, although links to where these assets can be found are included below):
+* Sprites: https://vurmux.itch.io/urizen-onebit-tilesets (Under the CC0 license)
